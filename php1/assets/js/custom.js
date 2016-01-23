@@ -1,0 +1,1 @@
+$("li.disabled > a").click(function(ev) {ev.preventDefault();})

@@ -5,6 +5,9 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
+table td {
+  text-align: left;
+}
 .fileUpload {
     position: relative;
     overflow: hidden;

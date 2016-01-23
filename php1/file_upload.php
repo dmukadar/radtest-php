@@ -1,4 +1,6 @@
 <?php
+include "common.inc.php";
+
 session_start();
 try {   
     // Undefined | Multiple Files | $_FILES Corruption Attack
@@ -35,11 +37,9 @@ try {
 
     if (move_uploaded_file(
         $_FILES['logfile']['tmp_name'],
-        sprintf('./uploads/spool.txt',
-            sha1_file($_FILES['logfile']['tmp_name'])
-        )
+        $filepath
     )) {
-        header('location: processing.php');
+        header('location: progress.php');
     }
     else {   
         throw new RuntimeException('Failed to move uploaded file.');

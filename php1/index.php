@@ -1,5 +1,6 @@
 <?php session_start(); 
-
+include "common.inc.php";
+$dirpath = dirname($filepath);
 ?><!DOCTYPE html>
 <html lang="en">
   <head>
@@ -27,12 +28,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Radius Accounting</a>
+          <a class="navbar-brand" href="index.php">Radius Accounting</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">01. File Upload</a></li>
-            <li class="disabled"><a href="#">02. Log Processing</a></li>
+            <li class="active"><a href="index.php">01. File Upload</a></li>
+            <li class="disabled"><a href="progress.php">02. Log Processing</a></li>
             <li class="disabled"><a href="#">03. Display Result</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -51,7 +52,7 @@
         </div>
         <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
-        <?php if (! file_exists('./uploads') || ! is_writable('./uploads')) : ?>
+        <?php if (! file_exists($dirpath) || ! is_writable($dirpath)) : ?>
         <div class="alert alert-warning alert-dismissible" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <strong>Warning:</strong> folder `uploads` should exists and writable.
@@ -73,6 +74,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/custom.js"></script>
     <script type="text/javascript">
       $("#uploadFile").change(function() {
         $("form").submit();
