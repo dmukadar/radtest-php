@@ -1,9 +1,11 @@
 <?php
+  include "common.inc.php";
+
   $filesize = 0;
-  if (file_exists('./uploads/spool.txt')) {
+  if (file_exists($filepath)) {
     $decimals = 2;
     $sz = 'BKMGTP';
-    $bytes = filesize('./uploads/spool.txt');
+    $bytes = filesize($filepath);
     $factor = floor((strlen($bytes) - 1) / 3);
     $filesize = sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
   }

@@ -15,6 +15,7 @@ class DbLink {
     public $dsn;
     public $username;
     public $password;
+    public $rowLimit = 5;
 
     public function __construct($config)
     {
@@ -86,5 +87,30 @@ EOL;
             if ($timestamp) return date('Y-m-d H:i:s', $timestamp);
         }
         return null;
+    }
+
+    public function getTotalPageNumber()
+    {
+        $statement = $this->db->query('SELECT COUNT(-1) total_count FROM `cdr`');
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        return ceil($row['total_count'] / $this->rowLimit);
+    }
+
+    public function getPerPage($page)
+    {
+        $offset = ($page-1) * $this->rowLimit;
+        $query = <<<EOL
+SELECT `acctSessionId`, `callingStationId`, `calledStationId`, `setupTime`, `connectTime`, `disconnectTime` 
+FROM `cdr`
+LIMIT $offset, $this->rowLimit
+EOL;
+        $statement = $this->db->query($query);
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    }
+
+    public function localConvert($datetime)
+    {
+        return date('D M d H:i:s Y', strtotime($datetime));
     }
 }
