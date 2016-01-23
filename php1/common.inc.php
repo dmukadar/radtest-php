@@ -16,6 +16,7 @@ class DbLink {
     public $username;
     public $password;
     public $rowLimit = 5;
+    public $searchTerm;
 
     public function __construct($config)
     {
@@ -91,17 +92,26 @@ EOL;
 
     public function getTotalPageNumber()
     {
-        $statement = $this->db->query('SELECT COUNT(-1) total_count FROM `cdr`');
+        $query = 'SELECT COUNT(-1) total_count FROM `cdr`';
+        if (! empty($this->searchTerm)) {
+            $query .= ' WHERE `acctSessionId` LIKE "%' . $this->searchTerm . '%"';
+        }
+        $statement = $this->db->query($query);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         return ceil($row['total_count'] / $this->rowLimit);
     }
 
     public function getPerPage($page)
     {
+        $condition = '';
         $offset = ($page-1) * $this->rowLimit;
+        if (! empty($this->searchTerm)) {
+            $condition .= ' WHERE `acctSessionId` LIKE "%' . $this->searchTerm . '%"';
+        }
         $query = <<<EOL
 SELECT `acctSessionId`, `callingStationId`, `calledStationId`, `setupTime`, `connectTime`, `disconnectTime` 
 FROM `cdr`
+$condition
 LIMIT $offset, $this->rowLimit
 EOL;
         $statement = $this->db->query($query);

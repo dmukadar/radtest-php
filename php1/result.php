@@ -2,9 +2,16 @@
   include "common.inc.php";
 
   $page = 1;
+  $query = '';
   $rows = array();
   $dbLink = new DbLink($dbconfig);
   $dbLink->connect();
+
+  if (isset($_GET['query'])) {
+    $dbLink->searchTerm = $_GET['query'];
+    $query = '&query=' . $_GET["query"];
+  }
+
   $maxPage = $dbLink->getTotalPageNumber();
 
   if ($maxPage > 0) {
@@ -70,7 +77,7 @@
         <div class="pull-right">
           <form class="form-inline">
             <div class="form-group">
-              <input class="form-control" type="text" placeholder="Search record" />
+              <input class="form-control" type="text" placeholder="Search Session ID" name="query" value="<?php echo @$_GET['query']; ?>" />
               <button class="btn">
                 <span class="glyphicon glyphicon-search"></span>
               </button>
@@ -129,7 +136,7 @@
         $('#page-number').twbsPagination({
           totalPages: <?php echo $maxPage; ?>,
           visiblePages: 7,
-          href: '?page={{number}}',
+          href: '?page={{number}}<?php echo $query; ?>',
           onPageClick: function (event, page) {
               $('#page-content').text('Page ' + page);
           }
